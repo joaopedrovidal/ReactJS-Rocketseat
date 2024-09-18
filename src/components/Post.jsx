@@ -2,15 +2,20 @@ import { Avatar } from './Avatar';
 import { Comment } from './Comment';
 import styles from './Post.module.css';
 
-export function Post(){
+export function Post({ author,publishedAt }){
+    const publishedDateFormatted = new Intl.DateTimeFormat('pt-Br', {
+        day: '2-digit',
+        month: 'long'
+    })
+    
     return(
         <article className={styles.post}>
             <header>
                 <div className={styles.author}>
-                    <Avatar hasBorder src="https://github.com/joaopedrovidal.png"/>
+                    <Avatar hasBorder src={author.avatarUrl} />
                     <div className={styles.authorInfo}>
-                        <strong>João Pedro</strong>
-                        <span>Web Developer</span>
+                        <strong>{author.name}</strong>
+                        <span>{author.role}</span>
                     </div>
                 </div>
 
@@ -41,6 +46,8 @@ export function Post(){
             </form>
 
             <div className={styles.commentList}>
+                <Comment />
+                <Comment />
                 <Comment />
             </div> 
         </article>
