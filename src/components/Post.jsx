@@ -1,11 +1,17 @@
+import { format, formatDistanceToNow } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
 import { Avatar } from './Avatar';
 import { Comment } from './Comment';
 import styles from './Post.module.css';
 
-export function Post({ author,publishedAt }){
-    const publishedDateFormatted = new Intl.DateTimeFormat('pt-Br', {
-        day: '2-digit',
-        month: 'long'
+export function Post({ author, publishedAt, content }){
+    const publishedDateFormatted = format(publishedAt, "d 'de' LLLL 'às' HH:mm'h'", {
+        locale: ptBR
+    })
+
+    const publishedRelativeDateToNow = formatDistanceToNow(publishedAt, {
+        locale: ptBR,
+        addSuffix: true,
     })
     
     return(
@@ -19,18 +25,18 @@ export function Post({ author,publishedAt }){
                     </div>
                 </div>
 
-                <time title='17 de Setembro às 17:29h' dateTime='2024-09-17 17:29:48'>Publicado há 1 hora</time>
+                <time title={publishedDateFormatted} dateTime={publishedAt.toISOString()}>
+                    {publishedRelativeDateToNow}
+                </time>
             </header>
             <div className={styles.content}>
-                <p>Falaaaa galeraaa👋</p>
-                <p>Acabei de subir mais um projeto para o meu portifa. É um projeto que fiz no NLW Pocket, evento da Rocketseat🚀</p>
-                <p>👉{' '}<a href="">jane.design/doctorcare</a>
-                </p>
-                <p>
-                    <a href="">#novoprojeto</a>{' '}
-                    <a href="">#nlw</a>{' '}
-                    <a href="">#rocketseat</a>{' '}
-                </p>
+                {content.map(line => {
+                    if (line.type == 'paragraph'){
+                        return <p>{line.content}</p>;
+                    }else if(line.type == 'link'){
+                        return <p><a href="#">{line.content}</a></p>;
+                    }
+                })}
             </div>
 
             <form className={styles.commentForm}>
